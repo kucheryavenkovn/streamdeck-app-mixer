@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>App Mixer</title>
+  <style>
+    :root { color-scheme: dark; font: 12px 'Segoe UI', sans-serif; }
+    body { margin: 12px; color: #ddd; background: #2d2d2d; }
+    h3 { color: #4cc9f0; margin: 16px 0 8px; }
+    select, button, input { background: #414141; color: white; border: 1px solid #666; border-radius: 4px; padding: 6px; }
+    select { width: 100%; margin: 5px 0; }
+    button { cursor: pointer; margin: 3px; }
+    p { line-height: 1.5; }
+    #error { color: #ffba79; white-space: pre-wrap; overflow-wrap: anywhere; }
+    .pin { display: flex; align-items: center; gap: 4px; }
+    .pin span { flex: 1; overflow: hidden; text-overflow: ellipsis; }
+    .muted { color: #aaa; }
+  </style>
+</head>
+<body>
+  <h3>App Mixer · Windows</h3>
+  <p>Кнопка приложения → выбрать для валкодера; если закреплённое приложение закрыто — запустить.<br>Удержание кнопки → закрепить впереди списка.<br>Табло: касание → выбрать канал; удержание → LOCK.<br>Валкодер: вращение → громкость; нажатие → mute.<br><b>Зажать и вращать → листать приложения.</b></p>
+  <div id="error" role="status"></div>
+  <div id="routingSettings" hidden>
+    <h3>Устройство вывода</h3>
+    <p>Вращение выбирает выход, нажатие валкодера применяет. Само листание звук не переключает.</p>
+    <select id="output" aria-label="Устройство вывода"></select>
+    <button id="applyOutput">Применить выход</button><button id="cancelOutput">Отменить выбор</button>
+  </div>
+  <h3>Приложения</h3>
+  <p id="bindingHint"></p>
+  <select id="app" aria-label="Приложение"></select>
+  <select id="dial" aria-label="Валкодер">
+    <option value="0">Валкодер 1</option><option value="1">Валкодер 2</option>
+    <option value="2">Валкодер 3</option><option value="3">Валкодер 4</option>
+  </select>
+  <p id="targetStatus" role="status"></p>
+  <button id="assign">Назначить</button><button id="pin">Закрепить / убрать</button>
+  <button id="unlock">Разблокировать выбранный валкодер</button>
+  <h3>Исключения из автосписка</h3>
+  <p class="muted">Не показывать автоматически на всех страницах и устройствах. Ручное назначение остаётся доступно.</p>
+  <select id="excludeApp" aria-label="Приложение для исключения"></select>
+  <button id="exclude">Не добавлять автоматически</button>
+  <div id="excluded"></div>
+  <h3>Закреплённые (до 7)</h3><div id="pins"></div>
+  <p class="muted">Закреплённые кнопки остаются слева на всех страницах. Последний слот всегда доступен для листания.</p>
+  <button id="previous">←</button><span id="page">1/1</span><button id="next">→</button>
+  <div id="dialSettings"><h3>Настройка действия</h3>
+  <label>Шаг громкости: <input id="step" type="number" min="1" max="10" value="10" style="width:45px"> %</label></div>
+  <p class="muted">Сессии одного EXE на разных устройствах объединены. ≈ означает разные уровни: показан максимальный; регулировка выровняет их. Приложения без аудиосессии появятся после воспроизведения звука. Защищённые процессы могут быть недоступны.</p>
+  <script src="inspector.js"></script>
+</body>
+</html>

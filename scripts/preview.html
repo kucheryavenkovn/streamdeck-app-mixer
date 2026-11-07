@@ -1,0 +1,17 @@
+<!doctype html><html lang="ru"><meta charset="utf-8"><title>App Mixer · Preview</title>
+<style>
+body{background:#080e18;color:#dce6f5;font:16px 'Segoe UI',sans-serif;max-width:850px;margin:40px auto}#keys{display:grid;grid-template-columns:repeat(4,144px);gap:22px;justify-content:center}#keys button{border:0;background:none;padding:0;cursor:pointer}#strip{display:flex;justify-content:center;margin:30px 0 15px}#strip button{border:0;padding:0;cursor:pointer;background:none}#strip svg{width:200px;height:100px}.knobs{display:flex;justify-content:space-around;margin-bottom:25px}.knobs button,footer button{background:#21324a;color:white;border:1px solid #53769f;padding:12px;border-radius:8px;cursor:pointer}p{color:#9baec9;line-height:1.6}h1{font-size:24px}
+</style>
+<h1>App Mixer · Stream Deck +</h1><p>Демонстрация на тестовых данных. Кнопка — назначить; правый клик — закрепить. Табло — выбрать валкодер; правый клик — LOCK. Колесо мыши над табло — громкость.</p>
+<div id="keys"></div><div id="strip"></div><div class="knobs"></div>
+<footer><button id="prev">← Приложения</button> <span id="page"></span> <button id="next">Приложения →</button></footer>
+<script type="module">
+import { Mixer, clamp } from '/src/model.mjs'; import { keySvg, dialSvg } from '/src/render.mjs';
+const mixer=new Mixer();mixer.update(['Chrome','Firefox','Discord','OBS Studio','RDP','Pinokio','Spotify','Telegram','VLC','Teams','Steam','Game'].map((name,i)=>({key:name,name,volume:[65,40,82,100,25,70][i%6],online:true})));
+for(let i=0;i<4;i++){mixer.device('preview').selected=i;mixer.assign('preview',mixer.apps[i].key)}mixer.device('preview').selected=0;
+function render(){const d=mixer.device('preview'),p=mixer.page('preview');document.querySelector('#page').textContent=`${p.index+1}/${p.count}`;
+document.querySelector('#keys').replaceChildren(...Array.from({length:8},(_,i)=>{const a=p.apps[i],b=document.createElement('button');b.innerHTML=keySvg(a,{pinned:d.pins.includes(a?.key),dials:d.dials.flatMap((c,j)=>c.key===a?.key?[j]:[])});b.onclick=()=>{if(a)mixer.assign('preview',a.key);render()};b.oncontextmenu=e=>{e.preventDefault();if(a)mixer.togglePin('preview',a.key);render()};return b}));
+document.querySelector('#strip').replaceChildren(...d.dials.map((c,i)=>{const b=document.createElement('button');b.innerHTML=dialSvg(mixer.app(c.key),{slot:i,selected:d.selected===i,locked:c.locked,page:p.index,count:p.count});b.onclick=()=>{d.selected=i;render()};b.oncontextmenu=e=>{e.preventDefault();c.locked=!c.locked;render()};b.onwheel=e=>{e.preventDefault();const a=mixer.app(c.key);if(a)a.volume=clamp(a.volume-Math.sign(e.deltaY)*2,0,100);render()};return b}));
+document.querySelector('.knobs').replaceChildren(...d.dials.map((c,i)=>{const b=document.createElement('button');b.textContent=`${i+1} · Mute`;b.onclick=()=>{const a=mixer.app(c.key);if(a)a.muted=!a.muted;render()};return b}));}
+document.querySelector('#prev').onclick=()=>{mixer.turnPage('preview',-1);render()};document.querySelector('#next').onclick=()=>{mixer.turnPage('preview',1);render()};render();
+</script></html>

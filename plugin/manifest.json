@@ -1,0 +1,83 @@
+{
+  "$schema": "https://schemas.elgato.com/streamdeck/plugins/manifest.json",
+  "UUID": "local.tux.appmixer",
+  "Name": "App Mixer",
+  "Author": "Local tools",
+  "Description": "Windows application mixer: eight app keys, pinned favorites, four independent dials.",
+  "Version": "0.1.13.0",
+  "SDKVersion": 2,
+  "CodePath": "bin/plugin.mjs",
+  "Nodejs": { "Version": "20" },
+  "Software": { "MinimumVersion": "6.6" },
+  "OS": [{ "Platform": "windows", "MinimumVersion": "10" }],
+  "Icon": "images/mixer",
+  "Category": "App Mixer",
+  "CategoryIcon": "images/mixer",
+  "PropertyInspectorPath": "ui/index.html",
+  "Actions": [
+    {
+      "UUID": "local.tux.appmixer.app",
+      "Name": "Приложение (слот)",
+      "Icon": "images/mixer",
+      "Controllers": ["Keypad"],
+      "States": [{ "Image": "images/mixer", "ShowTitle": false }],
+      "UserTitleEnabled": false,
+      "SupportedInMultiActions": false,
+      "Tooltip": "Нажатие — назначить выбранному валкодеру. Удержание — закрепить впереди списка."
+    },
+    {
+      "UUID": "local.tux.appmixer.dial",
+      "Name": "Канал микшера",
+      "Icon": "images/mixer",
+      "Controllers": ["Encoder"],
+      "States": [{ "Image": "images/mixer", "ShowTitle": false }],
+      "UserTitleEnabled": false,
+      "SupportedInMultiActions": false,
+      "Encoder": {
+        "layout": "layouts/mixer.json",
+        "TriggerDescription": {
+          "Rotate": "Громкость; с нажатием — страницы приложений",
+          "Push": "Mute (если не было вращения)",
+          "Touch": "Выбрать канал для назначения",
+          "LongTouch": "Закрепить / открепить назначение канала"
+        }
+      }
+    },
+    {
+      "UUID": "local.tux.appmixer.system-output",
+      "Name": "Системный аудиовыход",
+      "Icon": "images/mixer",
+      "Controllers": ["Encoder"],
+      "States": [{ "Image": "images/mixer", "ShowTitle": false }],
+      "UserTitleEnabled": false,
+      "SupportedInMultiActions": false,
+      "Encoder": {
+        "layout": "layouts/mixer.json",
+        "TriggerDescription": {
+          "Rotate": "Выбрать устройство; с нажатием — страницы приложений",
+          "Push": "Применить выбранный системный выход",
+          "Touch": "Выбрать канал",
+          "LongTouch": "Отменить выбор устройства"
+        }
+      }
+    },
+    {
+      "UUID": "local.tux.appmixer.app-output",
+      "Name": "Аудиовыход приложения",
+      "Icon": "images/mixer",
+      "Controllers": ["Encoder"],
+      "States": [{ "Image": "images/mixer", "ShowTitle": false }],
+      "UserTitleEnabled": false,
+      "SupportedInMultiActions": false,
+      "Encoder": {
+        "layout": "layouts/mixer.json",
+        "TriggerDescription": {
+          "Rotate": "Выбрать выход приложения; с нажатием — страницы приложений",
+          "Push": "Применить выход выбранного приложения",
+          "Touch": "Выбрать канал, затем нажать кнопку приложения",
+          "LongTouch": "LOCK назначения приложения"
+        }
+      }
+    }
+  ]
+}
